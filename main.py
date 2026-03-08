@@ -19,9 +19,10 @@ def get_shipments():
     }
     
 @app.get("/shipments/{id}")
-def get_shipment_by_id(id: int):
+def get_shipment_by_id(id: int) -> dict[str, str | int |  float]:
     return {
         "id": id,
+        "weight": 1.2,
         "content": "Supervised Box",
         "status" : "Delivered"
     }
