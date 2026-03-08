@@ -17,6 +17,18 @@ def get_shipments():
         "content": "RTX ",
         "status": "In trasmit"
     }
+
+##get latest shipments
+## order is matter in API decleration. 
+
+@app.get("/shipments/latest")
+def get_latest_shipments():
+    return {
+        "id": 4354,
+        "weight": 1.9,
+        "content": "Glass table",
+        "status" : "In transit"
+    }
     
 @app.get("/shipments/{id}")
 def get_shipment_by_id(id: int) -> dict[str, str | int |  float]:
@@ -26,6 +38,8 @@ def get_shipment_by_id(id: int) -> dict[str, str | int |  float]:
         "content": "Supervised Box",
         "status" : "Delivered"
     }
+    
+
     
 @app.get("/scalar", include_in_schema= False)    
 def get_scalar_doc():
