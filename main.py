@@ -4,6 +4,38 @@ from typing import Any
 
 app = FastAPI()
 
+#basic database
+
+shipments = {
+    12732:{
+        "weight": 1.9,
+        "content": "Glass table",
+        "status" : "In transit"
+    },
+    12733:{
+        "weight": 3.9,
+        "content": "Glass box",
+        "status" : "received"
+    },
+    
+    12735:{
+        "weight": 4.9,
+        "content": "Plastic bin",
+        "status" : "In transit"
+    },
+    12742:{
+        "weight": 0.9,
+        "content": "Glass door",
+        "status" : "In transit"
+    },
+    
+    12746:{
+        "weight": 4.3,
+        "content": "Laptop cover",
+        "status" : "In packing"
+    }
+}
+
 ## when define a class
 class City:
     
@@ -11,33 +43,21 @@ class City:
         self.name = name
         self.location = location
 
-@app.get("/shipments")
-def get_shipments():
-    return {
-        "content": "RTX ",
-        "status": "In trasmit"
-    }
+
 
 ##get latest shipments
 ## order is matter in API decleration. 
 
 @app.get("/shipments/latest")
-def get_latest_shipments():
-    return {
-        "id": 4354,
-        "weight": 1.9,
-        "content": "Glass table",
-        "status" : "In transit"
-    }
+def get_latest_shipments() -> dict[str, Any]:
+    id = max(shipments.keys())
+    return shipments[id]
     
 @app.get("/shipments/{id}")
-def get_shipment_by_id(id: int) -> dict[str, str | int |  float]:
-    return {
-        "id": id,
-        "weight": 1.2,
-        "content": "Supervised Box",
-        "status" : "Delivered"
-    }
+def get_shipment_by_id(id:int) -> dict[str, Any]:
+    
+    
+    return shipments[id]
     
 
     
