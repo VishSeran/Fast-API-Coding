@@ -79,11 +79,23 @@ def add_shipment(data: dict):
     return data """
 
 # we ca use path and query parameters together
-
-
 @app.get("/shipments/{field}")
 def get_shipments(field: str, id: int) -> dict[str, Any]:
     return {field: shipments[id][field]}
+
+# we can use put method to update whole fields
+@app.put("/shipment")
+def shipment_update(id: int, content: str, weight:float, status: str 
+                    ) ->  dict[str, Any]:
+    
+    shipments[id] = {
+        "content" : content,
+        "weight": weight,
+        "status": status
+    }
+    
+    return shipments[id]
+    
 
 
 @app.get("/scalar", include_in_schema=False)
