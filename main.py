@@ -95,6 +95,19 @@ def shipment_update(id: int, content: str, weight:float, status: str
     }
     
     return shipments[id]
+
+@app.patch("/shipment")
+def patch_shipment(id:int, content:str | None = None, 
+                   weight:str | None = None, 
+                   status:str | None = None):
+    
+    shipment = shipments[id]
+    if content:
+        shipment["content"] = content
+    if weight:
+        shipment["weight"] = weight
+    if status:
+        shipment["status"] = status
     
 
 
