@@ -26,7 +26,7 @@ class City:
 ## order is matter in API decleration.
 
 
-@app.get("/shipments/latest")
+@app.get("/shipment/latest")
 def get_latest_shipments() -> dict[str, Any]:
     id = max(shipments.keys())
     return shipments[id]
@@ -41,7 +41,7 @@ def get_shipment_by_id(id:int) -> dict[str, Any]:
 # we can use query parameter to pass id to functio "get_shipment_by_id"
 
 
-@app.get("/shipments")
+@app.get("/shipment")
 def get_shipment_by_id(id: int | None = None) -> dict[str, Any]:
     if not id:
         id = max(shipments.keys())
@@ -55,7 +55,7 @@ def get_shipment_by_id(id: int | None = None) -> dict[str, Any]:
     return shipments[id]
 
 
-@app.post("/shipments")
+@app.post("/shipment")
 def add_shipment(data: dict) -> dict[str, Any]:
 
     content = data["content"]
@@ -74,12 +74,12 @@ def add_shipment(data: dict) -> dict[str, Any]:
 
 # if we want to get data from the request body we have to initiate a dict type paramter
 
-""" @app.post("/shipments") 
+""" @app.post("/shipment") 
 def add_shipment(data: dict):
     return data """
 
 # we ca use path and query parameters together
-@app.get("/shipments/{field}")
+@app.get("/shipment/{field}")
 def get_shipments(field: str, id: int) -> dict[str, Any]:
     return {field: shipments[id][field]}
 
@@ -95,6 +95,26 @@ def shipment_update(id: int, content: str, weight:float, status: str
     }
     
     return shipments[id]
+
+@app.patch("/shipment")
+def patch_shipment(id:int, body: dict[str, Any]) -> dict[str, Any]:
+    
+    #shipment = shipments[id]
+    # if content:
+    #     shipment["content"] = content
+    # if weight:
+    #     shipment["weight"] = weight
+    # if status:
+    #     shipment["status"] = status
+    
+    shipments[id].update(body)
+    return shipments[id]
+
+@app.delete("/shipment")
+def delete_shipment(id:int) -> dict[str,str]:
+    shipments.pop(id)
+    return {"Details": "shipment with id {} is deleted".format(id)}
+    
     
 
 
