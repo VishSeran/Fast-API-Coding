@@ -11,8 +11,15 @@ class ShipmentStatus(str,Enum):
     in_transit = "in_transit"
     delivered = "delievered"
 
-class Shipment(BaseModel):
-    content :str = Field(max_length=100, description="Brief description of the item")
+class BaseShipment(BaseModel):
+    content :str 
     weight: float = Field(le=25, ge=1)
     destination: int | None = Field(default_factory=rand_destination)
+class ShipmentRead(BaseShipment):
     status: ShipmentStatus
+    
+class ShipmentCreate(BaseShipment):
+    pass
+
+class ShipmentUpdate(BaseModel):
+    status: ShipmentStatus 

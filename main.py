@@ -1,7 +1,7 @@
 from fastapi import FastAPI, status, HTTPException
 from scalar_fastapi import get_scalar_api_reference
 from typing import Any
-from .schemas import Shipment, ShipmentStatus
+from .schemas import  ShipmentCreate, ShipmentRead, ShipmentStatus, ShipmentUpdate
 from enum import Enum
 
 app = FastAPI()
@@ -42,7 +42,7 @@ def get_shipment_by_id(id:int) -> dict[str, Any]:
 # we can use query parameter to pass id to functio "get_shipment_by_id"
 
 
-@app.get("/shipment",response_model=Shipment)
+@app.get("/shipment",response_model=ShipmentRead)
 def get_shipment_by_id(id: int):
     
     if id not in shipments:
@@ -55,7 +55,7 @@ def get_shipment_by_id(id: int):
 
 
 @app.post("/shipment")
-def add_shipment(data: Shipment) -> dict[str, Any]:
+def add_shipment(data: ShipmentCreate) -> dict[str, Any]:
 
     content = data.content
     weight = data.weight
@@ -79,20 +79,20 @@ def get_shipments(field: str, id: int) -> dict[str, Any]:
     return {field: shipments[id][field]}
 
 # we can use put method to update whole fields
-@app.put("/shipment")
-def shipment_update(id: int, content: str, weight:float, status: str 
-                    ) ->  dict[str, Any]:
+# @app.put("/shipment",response_model=ShipmentUpdate)
+# def shipment_update(id: int, content: str, weight:float, status: str 
+#                     ) ->  dict[str, Any]:
     
-    shipments[id] = {
-        "content" : content,
-        "weight": weight,
-        "status": status
-    }
+#     shipments[id] = {
+#         "content" : content,
+#         "weight": weight,
+#         "status": status
+#     }
     
-    return shipments[id]
+#     return shipments[id]
 
-@app.patch("/shipment")
-def patch_shipment(id:int, body: dict[str,ShipmentStatus]) -> dict[str, Any]:
+@app.patch("/shipment",response_model=ShipmentRead)
+def patch_shipment(id:int, body: ShipmentUpdate):
     
     #shipment = shipments[id]
     # if content:
