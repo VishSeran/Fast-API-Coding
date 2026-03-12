@@ -1,13 +1,14 @@
 from fastapi import FastAPI, status, HTTPException
 from scalar_fastapi import get_scalar_api_reference
 from typing import Any
+from .schemas import Shipment, ShipmentStatus
+from enum import Enum
 
 app = FastAPI()
 
-# basic database
 
 shipments = {
-    12732: {"weight": 1.9, "content": "Glass table", "status": "In transit"},
+    12732: {"weight": 1.9, "content": "Glass table", "status": "placed"},
     12733: {"weight": 3.9, "content": "Glass box", "status": "received"},
     12735: {"weight": 4.9, "content": "Plastic bin", "status": "In transit"},
     12742: {"weight": 0.9, "content": "Glass door", "status": "In transit"},
@@ -41,33 +42,27 @@ def get_shipment_by_id(id:int) -> dict[str, Any]:
 # we can use query parameter to pass id to functio "get_shipment_by_id"
 
 
-@app.get("/shipment")
-def get_shipment_by_id(id: int | None = None) -> dict[str, Any]:
-    if not id:
-        id = max(shipments.keys())
-        return shipments[id]
-
+@app.get("/shipment",response_model=Shipment)
+def get_shipment_by_id(id: int):
+    
     if id not in shipments:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Id does not exists"
         )
-
+    
     return shipments[id]
+    
 
 
 @app.post("/shipment")
-def add_shipment(data: dict) -> dict[str, Any]:
+def add_shipment(data: Shipment) -> dict[str, Any]:
 
-    content = data["content"]
-    weight = data["weight"]
+    content = data.content
+    weight = data.weight
+    destination = data.destination
     new_id = max(shipments.keys()) + 1
 
-    if weight > 25:
-        raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail="Weight must be below 25kg",
-        )
-    shipments[new_id] = {"content": content, "weight": weight, "status": "Placed"}
+    shipments[new_id] = {"content": content, "weight": weight, "destination": destination ,"status": "Placed"}
 
     return {"id": new_id}
 
@@ -97,7 +92,7 @@ def shipment_update(id: int, content: str, weight:float, status: str
     return shipments[id]
 
 @app.patch("/shipment")
-def patch_shipment(id:int, body: dict[str, Any]) -> dict[str, Any]:
+def patch_shipment(id:int, body: dict[str,ShipmentStatus]) -> dict[str, Any]:
     
     #shipment = shipments[id]
     # if content:
