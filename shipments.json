@@ -1,0 +1,39 @@
+[
+    {
+        "id": 12732,
+        "weight": 1.9,
+        "content": "Glass table",
+        "status": "placed"
+    },
+    {
+        "id": 12733,
+        "weight": 3.9,
+        "content": "Glass box",
+        "status": "placed"
+    },
+    {
+        "id": 12735,
+        "weight": 4.9,
+        "content": "Plastic bin",
+        "status": "in_transit"
+    },
+    {
+        "id": 12742,
+        "weight": 0.9,
+        "content": "Glass door",
+        "status": "in_transit"
+    },
+    {
+        "id": 12746,
+        "weight": 4.3,
+        "content": "Laptop cover",
+        "status": "in_transit"
+    },
+    {
+        "content": "Wisky",
+        "weight": 21.0,
+        "destination": 121,
+        "id": 12747,
+        "status": "Placed"
+    }
+]

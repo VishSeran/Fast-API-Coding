@@ -3,17 +3,19 @@ from scalar_fastapi import get_scalar_api_reference
 from typing import Any
 from .schemas import  ShipmentCreate, ShipmentRead, ShipmentStatus, ShipmentUpdate
 from enum import Enum
+from .database import shipments,save
+
 
 app = FastAPI()
 
 
-shipments = {
-    12732: {"weight": 1.9, "content": "Glass table", "status": "placed"},
-    12733: {"weight": 3.9, "content": "Glass box", "status": "received"},
-    12735: {"weight": 4.9, "content": "Plastic bin", "status": "In transit"},
-    12742: {"weight": 0.9, "content": "Glass door", "status": "In transit"},
-    12746: {"weight": 4.3, "content": "Laptop cover", "status": "In packing"},
-}
+# shipments = {
+#     12732: {"weight": 1.9, "content": "Glass table", "status": "placed"},
+#     12733: {"weight": 3.9, "content": "Glass box", "status": "received"},
+#     12735: {"weight": 4.9, "content": "Plastic bin", "status": "In transit"},
+#     12742: {"weight": 0.9, "content": "Glass door", "status": "In transit"},
+#     12746: {"weight": 4.3, "content": "Laptop cover", "status": "In packing"},
+# }
 
 
 ## when define a class
@@ -61,7 +63,9 @@ def add_shipment(shipment: ShipmentCreate) -> dict[str, Any]:
 
     shipments[new_id] = {
         **shipment.model_dump(),
+        "id":new_id,
         "status": "Placed"}
+    save()
 
     return {"id": new_id}
 
