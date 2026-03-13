@@ -1,9 +1,8 @@
 from fastapi import FastAPI, status, HTTPException
 from scalar_fastapi import get_scalar_api_reference
 from typing import Any
-from .schemas import  ShipmentCreate, ShipmentRead, ShipmentStatus, ShipmentUpdate
-from enum import Enum
-from .database import shipments,save
+from .schemas import  ShipmentCreate, ShipmentRead, ShipmentUpdate
+from .database_json import shipments,save
 
 
 app = FastAPI()
