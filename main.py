@@ -55,14 +55,13 @@ def get_shipment_by_id(id: int):
 
 
 @app.post("/shipment")
-def add_shipment(data: ShipmentCreate) -> dict[str, Any]:
+def add_shipment(shipment: ShipmentCreate) -> dict[str, Any]:
 
-    content = data.content
-    weight = data.weight
-    destination = data.destination
     new_id = max(shipments.keys()) + 1
 
-    shipments[new_id] = {"content": content, "weight": weight, "destination": destination ,"status": "Placed"}
+    shipments[new_id] = {
+        **shipment.model_dump(),
+        "status": "Placed"}
 
     return {"id": new_id}
 
@@ -94,6 +93,12 @@ def get_shipments(field: str, id: int) -> dict[str, Any]:
 @app.patch("/shipment",response_model=ShipmentRead)
 def patch_shipment(id:int, body: ShipmentUpdate):
     
+    print("="*30)
+    print(body)
+    print("="*30)
+    print("="*30)
+    print(body.model_dump(exclude_none=True))
+    
     #shipment = shipments[id]
     # if content:
     #     shipment["content"] = content
@@ -102,7 +107,7 @@ def patch_shipment(id:int, body: ShipmentUpdate):
     # if status:
     #     shipment["status"] = status
     
-    shipments[id].update(body)
+    shipments[id].update(body.model_dump(exclude_none=True))
     return shipments[id]
 
 @app.delete("/shipment")
