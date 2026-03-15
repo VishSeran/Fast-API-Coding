@@ -10,19 +10,19 @@ class Database:
         self.connection = sqlite3.connect("ShipmentDatabase.db")
         #Cursor object for query executions
         self.cursor = self.connection.cursor()
-        self.create_table("shipment")
+        self.create_table()
         
     # create table
-    def create_table(self,name:str):
+    def create_table(self):
         # 1. Create table
         self.cursor.execute("""
-            CREATE TABLE IF NOT EXIST ? (
+            CREATE TABLE IF NOT EXIST shipment (
                 id INTEGER PRIMARY KEY,
                 content TEXT,
                 weight REAL,
                 status TEXT
             )        
-                """,(name,))
+                """)
 
     # 2. Add shipment data
     def create(self, shipment:ShipmentCreate) -> int:
@@ -62,7 +62,7 @@ class Database:
         }
         
     # update a shipment
-    def update(self, id:int, shipment: ShipmentUpdate)-> dict[str, Any]:
+    def update(self, id:int, shipment: ShipmentUpdate)-> dict[str, Any] | None:
         self.cursor.execute("""
             UPDATE shipment SET status = :status
             WHERE id = :id                

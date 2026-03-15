@@ -3,82 +3,39 @@ from scalar_fastapi import get_scalar_api_reference
 from typing import Any
 from .schemas import  ShipmentCreate, ShipmentRead, ShipmentUpdate
 from .database_json import shipments,save
+from .database import Database
 
 
 app = FastAPI()
-
-
-# shipments = {
-#     12732: {"weight": 1.9, "content": "Glass table", "status": "placed"},
-#     12733: {"weight": 3.9, "content": "Glass box", "status": "received"},
-#     12735: {"weight": 4.9, "content": "Plastic bin", "status": "In transit"},
-#     12742: {"weight": 0.9, "content": "Glass door", "status": "In transit"},
-#     12746: {"weight": 4.3, "content": "Laptop cover", "status": "In packing"},
-# }
-
-
-## when define a class
-class City:
-    def __init__(self, name: str, location: str):
-        self.name = name
-        self.location = location
-
-
-##get latest shipments
-## order is matter in API decleration.
-
-
-@app.get("/shipment/latest")
-def get_latest_shipments() -> dict[str, Any]:
-    id = max(shipments.keys())
-    return shipments[id]
-
-
-""" @app.get("/shipments/{id}")
-def get_shipment_by_id(id:int) -> dict[str, Any]:
-    
-    
-    return shipments[id]
- """
-# we can use query parameter to pass id to functio "get_shipment_by_id"
+db = Database()
 
 
 @app.get("/shipment",response_model=ShipmentRead)
 def get_shipment_by_id(id: int):
     
-    if id not in shipments:
+    shipment = db.get(id)
+    
+    if shipment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Id does not exists"
         )
     
-    return shipments[id]
+    return shipments
     
 
 
 @app.post("/shipment")
 def add_shipment(shipment: ShipmentCreate) -> dict[str, Any]:
 
-    new_id = max(shipments.keys()) + 1
-
-    shipments[new_id] = {
-        **shipment.model_dump(),
-        "id":new_id,
-        "status": "Placed"}
-    save()
-
+    new_id = db.create(shipment)
     return {"id": new_id}
 
 
-# if we want to get data from the request body we have to initiate a dict type paramter
 
-""" @app.post("/shipment") 
-def add_shipment(data: dict):
-    return data """
-
-# we ca use path and query parameters together
-@app.get("/shipment/{field}")
-def get_shipments(field: str, id: int) -> dict[str, Any]:
-    return {field: shipments[id][field]}
+# # we ca use path and query parameters together
+# @app.get("/shipment/{field}")
+# def get_shipments(field: str, id: int) -> dict[str, Any]:
+#     return {field: shipments[id][field]}
 
 # we can use put method to update whole fields
 # @app.put("/shipment",response_model=ShipmentUpdate)
@@ -96,12 +53,12 @@ def get_shipments(field: str, id: int) -> dict[str, Any]:
 @app.patch("/shipment",response_model=ShipmentRead)
 def patch_shipment(id:int, body: ShipmentUpdate):
     
-    shipments[id].update(body.model_dump(exclude_none=True))
-    return shipments[id]
+    shipment = db.update(id,body)
+    return shipment
 
 @app.delete("/shipment")
 def delete_shipment(id:int) -> dict[str,str]:
-    shipments.pop(id)
+    db.delete(id)
     return {"Details": "shipment with id {} is deleted".format(id)}
     
     
