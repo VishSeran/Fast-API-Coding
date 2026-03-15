@@ -1,7 +1,7 @@
 import sqlite3
 from typing import Any
 
-from schemas import ShipmentCreate
+from schemas import ShipmentCreate, ShipmentUpdate
 
 class Database:
     
@@ -29,8 +29,8 @@ class Database:
         self.cursor.execute("""
                 SELECT MAX(id) FROM shipment            
                             """)
-        new_id = (self.cursor.fetchone()) + 1
-        
+        result = (self.cursor.fetchone()) + 1
+        new_id = result[0] + 1
         self.cursor.execute("""
             INSERT INTO shipment 
             VALUES (:id, :content, :weight, :status)
@@ -50,12 +50,28 @@ class Database:
             SELECT * FROM shipment WHERE id = ?                            
                             """, (id,))
         result = self.cursor.fetchone()
+        
+        if not result:
+            return {"detail": "No record found"}
+             
         return {
             "id" : result[0],
             "content": result[1],
             "weight": result[2],
             "status": result[3]
         }
+        
+    # update a shipment
+    def update(self, id:int, shipment: ShipmentUpdate)-> dict[str, Any]:
+        self.cursor.execute("""
+            UPDATE shipment SET status = :status
+            WHERE id = :id                
+            """,{
+                "id": id,
+                **shipment.model_dump()
+            })
+        self.connection.commit()
+        return self.get(id)
 
 # 3. Fetch data from database
 # cursor.execute("""
@@ -67,24 +83,4 @@ class Database:
 
 # 4. update a shipment
 
-id = 0
-status = 'placed'
-cursor.execute("""
-    UPDATE shipment SET status = :status
-    WHERE id > :id
-               """,
-               {
-                   "status" : status,
-                   "id": id
-               })
-connection.commit()
 
-#5. Delete a shipment by id
-
-# cursor.execute("""
-#          DELETE FROM shipment
-#          WHERE id =  12752
-#                """)
-# connection.commit()
-# Close Connection when done
-connection.close()
