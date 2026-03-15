@@ -96,20 +96,6 @@ def get_shipments(field: str, id: int) -> dict[str, Any]:
 @app.patch("/shipment",response_model=ShipmentRead)
 def patch_shipment(id:int, body: ShipmentUpdate):
     
-    print("="*30)
-    print(body)
-    print("="*30)
-    print("="*30)
-    print(body.model_dump(exclude_none=True))
-    
-    #shipment = shipments[id]
-    # if content:
-    #     shipment["content"] = content
-    # if weight:
-    #     shipment["weight"] = weight
-    # if status:
-    #     shipment["status"] = status
-    
     shipments[id].update(body.model_dump(exclude_none=True))
     return shipments[id]
 
