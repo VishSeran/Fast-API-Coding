@@ -1,4 +1,5 @@
 import sqlite3
+from typing import Any
 
 from schemas import ShipmentCreate
 
@@ -10,7 +11,8 @@ class Database:
         #Cursor object for query executions
         self.cursor = self.connection.cursor()
         self.create_table("shipment")
-    
+        
+    # create table
     def create_table(self,name:str):
         # 1. Create table
         self.cursor.execute("""
@@ -22,8 +24,8 @@ class Database:
             )        
                 """,(name,))
 
-
-    def create(self, shipment:ShipmentCreate):
+    # 2. Add shipment data
+    def create(self, shipment:ShipmentCreate) -> int:
         self.cursor.execute("""
                 SELECT MAX(id) FROM shipment            
                             """)
@@ -39,13 +41,21 @@ class Database:
                 "status": "placed"
             })
         self.connection.commit()
+        return new_id
 
-# 2. Add shipment data
-# cursor.execute("""
-#         INSERT INTO shipment 
-#         VALUES (3, 'plam tree', 12.5, 'in_transit')           
-#     """)
-# connection.commit()
+    # get shipment
+    def get(self, id:int)-> dict[str, Any]:
+        
+        self.cursor.execute("""
+            SELECT * FROM shipment WHERE id = ?                            
+                            """, (id,))
+        result = self.cursor.fetchone()
+        return {
+            "id" : result[0],
+            "content": result[1],
+            "weight": result[2],
+            "status": result[3]
+        }
 
 # 3. Fetch data from database
 # cursor.execute("""
