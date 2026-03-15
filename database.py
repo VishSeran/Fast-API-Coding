@@ -73,14 +73,18 @@ class Database:
         self.connection.commit()
         return self.get(id)
 
-# 3. Fetch data from database
-# cursor.execute("""
-#          SELECT * FROM shipment
-#          WHERE status = 'placed'      
-#                """)
-# result = cursor.fetchmany(2)
-# print(result)
+    # delete a shipment
+    def delete(self, id:int):
+        self.cursor.execute("""
+            DELETE FROM shipment 
+            WHERE id = ?                
+            """,(id,))
+        self.connection.commit()
+    
+    # close the database connection
+    def close(self):
+        self.connection.close()
 
-# 4. update a shipment
+
 
 
