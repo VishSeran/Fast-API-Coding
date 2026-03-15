@@ -1,5 +1,6 @@
 import sqlite3
 from typing import Any
+from contextlib import contextmanager
 
 from .schemas import ShipmentCreate, ShipmentUpdate
 
@@ -97,10 +98,24 @@ class Database:
         self.connect_to_db()
         self.create_table()
         return self
+    
     # context manager exit point
     def __exit__(self, *args):
         self.close()
         
+# so when we import and use a predefine module as a context manager
+# then we have to define a function to execute the context decorator
+@contextmanager
+def manage_db ():
+    
+    db = Database()
+    db.connect_to_db()
+    db.create_table()
+    
+    yield db
 
-with Database() as db:
-    db.get(1)
+    #dispose
+    db.close()
+
+with manage_db() as database:
+    database.get(1)
