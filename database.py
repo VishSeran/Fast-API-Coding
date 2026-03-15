@@ -5,12 +5,12 @@ from .schemas import ShipmentCreate, ShipmentUpdate
 
 
 class Database:
-    def __init__(self):
+    
+    def connect_to_db(self):
         # make the conncetion
         self.connection = sqlite3.connect("sqlite.db", check_same_thread=False)
         # Cursor object for query executions
         self.cursor = self.connection.cursor()
-        self.create_table()
 
     # create table
     def create_table(self):
@@ -91,3 +91,16 @@ class Database:
     # close the database connection
     def close(self):
         self.connection.close()
+    
+    # context manager enter point  
+    def __enter__(self):
+        self.connect_to_db()
+        self.create_table()
+        return self
+    # context manager exit point
+    def __exit__(self, *args):
+        self.close()
+        
+
+with Database() as db:
+    db.get(1)
