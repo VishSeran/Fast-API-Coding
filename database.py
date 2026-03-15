@@ -44,15 +44,15 @@ class Database:
         return new_id
 
     # get shipment
-    def get(self, id:int)-> dict[str, Any]:
+    def get(self, id:int)-> dict[str, Any] | None:
         
         self.cursor.execute("""
             SELECT * FROM shipment WHERE id = ?                            
                             """, (id,))
         result = self.cursor.fetchone()
         
-        if not result:
-            return {"detail": "No record found"}
+        if result is None:
+            return None
              
         return {
             "id" : result[0],
