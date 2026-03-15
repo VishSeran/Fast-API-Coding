@@ -1,22 +1,44 @@
 import sqlite3
 
-#Make connection
-connection = sqlite3.connect("sqlite.db")
-cursor = connection.cursor()# make the cursor object
+from schemas import ShipmentCreate
 
-# execute the sql queries by cursor object 
-# 1. Create table
-cursor.execute("""
-    CREATE TABLE IF NOT EXISTS shipment (
-        id INTEGER PRIMARY KEY,
-        content TEXT,
-        weight REAL,
-        status TEXT
-    )
-               """)
+class Database:
+    
+    def __init__(self):
+        # make the conncetion
+        self.connection = sqlite3.connect("ShipmentDatabase.db")
+        #Cursor object for query executions
+        self.cursor = self.connection.cursor()
+        self.create_table("shipment")
+    
+    def create_table(self,name:str):
+        # 1. Create table
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXIST ? (
+                id INTEGER PRIMARY KEY,
+                content TEXT,
+                weight REAL,
+                status TEXT
+            )        
+                """,(name,))
 
-# cursor.execute("DROP TABLE shipment")
-# connection.commit()
+
+    def create(self, shipment:ShipmentCreate):
+        self.cursor.execute("""
+                SELECT MAX(id) FROM shipment            
+                            """)
+        new_id = (self.cursor.fetchone()) + 1
+        
+        self.cursor.execute("""
+            INSERT INTO shipment 
+            VALUES (:id, :content, :weight, :status)
+                            """,
+            {
+                "id": new_id,
+                **shipment.model_dump(),
+                "status": "placed"
+            })
+        self.connection.commit()
 
 # 2. Add shipment data
 # cursor.execute("""
