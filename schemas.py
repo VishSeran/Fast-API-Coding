@@ -1,5 +1,5 @@
 
-from app.database.model import ShipmentStatus
+from .app.database.model import ShipmentStatus
 
 from pydantic import BaseModel, Field
 from random import randint

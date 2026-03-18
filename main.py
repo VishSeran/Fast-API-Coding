@@ -4,17 +4,15 @@ from contextlib import asynccontextmanager
 from typing import Any
 from .schemas import  ShipmentCreate, ShipmentRead, ShipmentUpdate
 from .database import Database
-from app.database.session import create_db
+from .app.database.session import create_db
 
 @asynccontextmanager
-def lifespan_handler(app:FastAPI):
+async def lifespan_handler(app:FastAPI):
     create_db()
     yield
     print("Server Stopped>>>")
 
 app = FastAPI(lifespan= lifespan_handler)
-
-
 
 db = Database()
 
