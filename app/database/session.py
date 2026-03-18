@@ -9,5 +9,6 @@ engine = create_engine (
     connect_args={"check_same_thread": False}
 )
 
-from .model import Shipment
-SQLModel.metadata.create_all(bind=engine)# create the all model tables using SQLModel metadata
+def create_db():
+    from .model import Shipment
+    SQLModel.metadata.create_all(bind=engine) # create the all model tables using SQLModel metadata
