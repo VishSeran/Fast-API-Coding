@@ -1,10 +1,15 @@
-from fastapi import FastAPI, status, HTTPException
+from datetime import datetime, timedelta
+from fastapi import Depends, FastAPI, status, HTTPException
 from scalar_fastapi import get_scalar_api_reference
 from contextlib import asynccontextmanager
 from typing import Any
+
+from sqlmodel import Session
+
+from .app.database.model import Shipment, ShipmentStatus
 from .schemas import  ShipmentCreate, ShipmentRead, ShipmentUpdate
 from .database import Database
-from .app.database.session import create_db
+from .app.database.session import create_db, SessionDep
 
 @asynccontextmanager
 async def lifespan_handler(app:FastAPI):
@@ -18,9 +23,9 @@ db = Database()
 
 
 @app.get("/shipment",response_model=ShipmentRead)
-def get_shipment_by_id(id: int):
+def get_shipment_by_id(id: int, session:SessionDep):
     
-    shipment = db.get(id)
+    shipment = session.get(Shipment, id)
     
     if shipment is None:
         raise HTTPException(
@@ -32,9 +37,19 @@ def get_shipment_by_id(id: int):
 
 
 @app.post("/shipment")
-def add_shipment(shipment: ShipmentCreate) -> dict[str, Any]:
+def add_shipment(shipment: ShipmentCreate,session:SessionDep) -> dict[str, Any]:
 
-    new_id = db.create(shipment)
+    new_shipment = Shipment(
+        **shipment.model_dump(),
+        status = ShipmentStatus.placed,
+        estimated_delivery= datetime.now() + timedelta(days = 3)
+    )
+    
+    session.add(new_shipment)
+    session.commit()
+    session.refresh(new_shipment)
+    
+    new_id = new_shipment.id
     return {"id": new_id}
 
 
