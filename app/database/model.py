@@ -8,7 +8,7 @@ class ShipmentStatus(str,Enum):
     in_transit = "in_transit"
     delivered = "delivered"
     
-class Shipment(SQLModel):
+class Shipment(SQLModel, table = True):
     
     #__tablename__ = "shipment"
     
