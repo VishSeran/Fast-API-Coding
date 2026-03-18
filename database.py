@@ -72,7 +72,7 @@ class Database:
                 status = :status
             WHERE id = :id               
             """,
-            {"id": id, **shipment.model_dump()},
+            {"id": id, **shipment.model_dump(exclude_none=True)},
         )
         self.connection.commit()
         return self.get(id)

@@ -21,5 +21,5 @@ class ShipmentCreate(BaseShipment):
     pass
 
 class ShipmentUpdate(BaseModel):
-    status: ShipmentStatus 
-    estimated_delivery: datetime
+    status: ShipmentStatus | None = Field(default=None)
+    estimated_delivery: datetime | None = Field(default=None)

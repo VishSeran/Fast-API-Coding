@@ -16,5 +16,5 @@ class Shipment(SQLModel, table = True):
     content: str
     weight: float = Field(le=25)
     destination: int
-    status: ShipmentStatus
-    estimated_delivery: datetime
+    status: ShipmentStatus 
+    estimated_delivery: datetime 
