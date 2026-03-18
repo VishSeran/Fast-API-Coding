@@ -1,8 +1,7 @@
 import sqlite3
 from typing import Any
 from contextlib import contextmanager
-
-from .schemas import ShipmentCreate, ShipmentUpdate
+from schemas import ShipmentCreate, ShipmentUpdate
 
 
 class Database:
@@ -112,10 +111,11 @@ def manage_db ():
     db.connect_to_db()
     db.create_table()
     
-    yield db
+    yield db 
 
     #dispose
     db.close()
 
-with manage_db() as database:
-    database.get(1)
+
+with manage_db() as db:
+   print(db.get(1))
