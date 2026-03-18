@@ -1,7 +1,7 @@
 import sqlite3
 from typing import Any
 from contextlib import contextmanager
-from schemas import ShipmentCreate, ShipmentUpdate
+from .schemas import ShipmentCreate, ShipmentUpdate
 
 
 class Database:
@@ -72,7 +72,7 @@ class Database:
                 status = :status
             WHERE id = :id               
             """,
-            {"id": id, **shipment.model_dump()},
+            {"id": id, **shipment.model_dump(exclude_none=True)},
         )
         self.connection.commit()
         return self.get(id)
