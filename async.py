@@ -23,16 +23,20 @@ async def server():
     
     start_time = time.perf_counter()
     # This schedules all three immediately — they run concurrently
-    requests = [
-        asyncio.create_task(endpoint(route))
-        for route in test    
-    ]
+    # requests = [
+    #     asyncio.create_task(endpoint(route))
+    #     for route in test
+    # ]
     
-    done, pending = await asyncio.wait(requests)
+    # done,pending = await asyncio.wait(requests)
     
-    
-    for task in done:
-        print("Result:", task.result())
+    async with asyncio.TaskGroup() as task_group:
+        tasks = [
+            task_group.create_task(endpoint(route))
+            for route in test
+            ]
+        # give the task results after it is processed
+        print(await tasks[0])
     end_time = time.perf_counter()
     
     print(f"Time taken: {(end_time-start_time):.2f}")
