@@ -1,15 +1,19 @@
+import asyncio
 import time
 
 from rich import print
 
-def endpoint(route):
+async def endpoint(route:str) -> str:
     print(f">> handling {route}")
-    time.sleep(1)
+    await asyncio.sleep(1)
     print(f"<< reponse {route}")
     return route
 
+# endpoint function now converted to coroutine, so we have to follow
+# asyncio or await for run coroutine function
+#endpoint("")
 
-def server():
+async def server():
     
     test = (
         "GET /shipment?id=1",
@@ -19,9 +23,12 @@ def server():
     
     start_time = time.perf_counter()
     for route in test:
-        endpoint(route)
+        result = await endpoint(route)
+        print("Result back: ", result)
     end_time = time.perf_counter()
     
     print(f"Time taken: {(end_time-start_time):.2f}")
     
-server() 
+asyncio.run(
+    server()
+)
