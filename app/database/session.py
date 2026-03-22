@@ -12,10 +12,8 @@ engine = create_engine (
 
 from .model import Shipment
 def create_db():
-    
     SQLModel.metadata.create_all(bind=engine)
 
-session = Session(bind=engine)
 
 def session_bind():
     with Session(bind=engine) as session:

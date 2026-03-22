@@ -89,9 +89,6 @@ class Database:
         self.connection.commit()
 
     # close the database connection
-    def close(self):
-        self.connection.close()
-    
     # context manager enter point  
     def __enter__(self):
         self.connect_to_db()
@@ -119,3 +116,5 @@ def manage_db ():
 
 with manage_db() as db:
    print(db.get(1))
+   
+    
