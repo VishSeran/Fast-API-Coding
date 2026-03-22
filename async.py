@@ -21,6 +21,8 @@ async def server():
         "GET /shipment?id=3"
     )
     
+    start_time = time.perf_counter()
+    # This schedules all three immediately — they run concurrently
     requests = [
         asyncio.create_task(endpoint(route))
         for route in test    
@@ -28,7 +30,7 @@ async def server():
     
     done, pending = await asyncio.wait(requests)
     
-    start_time = time.perf_counter()
+    
     for task in done:
         print("Result:", task.result())
     end_time = time.perf_counter()
