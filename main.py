@@ -108,3 +108,4 @@ def delete_shipment(id:int, session:SessionDep) -> dict[str,str]:
 def get_scalar_doc():
     return get_scalar_api_reference(openapi_url=app.openapi_url, title="Scalar FastAPI")
 
+    
