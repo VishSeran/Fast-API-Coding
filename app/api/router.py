@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException,status
 
 from app.database.model import Shipment, ShipmentStatus
 from app.database.session import SessionDep
-from app.schemas import ShipmentCreate, ShipmentRead, ShipmentUpdate
+from app.api.schemas.schemas import ShipmentCreate, ShipmentRead, ShipmentUpdate
 
 router = APIRouter()
 
