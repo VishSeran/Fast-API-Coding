@@ -1,25 +1,18 @@
+from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta
-from typing import Any
-
-from fastapi import FastAPI, HTTPException, status
 from scalar_fastapi import get_scalar_api_reference
-
-from .app.database.model import Shipment, ShipmentStatus
-from .app.database.session import SessionDep, create_db
-from .database import Database
-from .schemas import ShipmentCreate, ShipmentRead, ShipmentUpdate
-
+from app.database.session import create_db
+from app.api.router import router
 
 @asynccontextmanager
 async def lifespan_handler(app:FastAPI):
     create_db()
     yield
     print("Server Stopped>>>")
-
+    
 app = FastAPI(lifespan= lifespan_handler)
-
-db = Database()
+# router connected
+app.include_router(router)
 
 
 
