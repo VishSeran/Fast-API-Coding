@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException,status
 from app.database.model import Shipment, ShipmentStatus
 from app.database.session import SessionDep
 from app.api.schemas.schemas import ShipmentCreate, ShipmentRead, ShipmentUpdate
+from app.services.shipment import ShipmentService
 
 router = APIRouter()
 
@@ -11,7 +12,7 @@ router = APIRouter()
 @router.get("/shipment",response_model=ShipmentRead)
 async def get_shipment_by_id(id: int, session:SessionDep):
     
-    shipment = await session.get(Shipment, id)
+    shipment = await ShipmentService(session).get(id)
     
     if shipment is None:
         raise HTTPException(
@@ -23,19 +24,7 @@ async def get_shipment_by_id(id: int, session:SessionDep):
 
 @router.post("/shipment")
 async def add_shipment(shipment: ShipmentCreate,session:SessionDep) -> dict[str, Any]:
-
-    new_shipment = Shipment(
-        **shipment.model_dump(),
-        status = ShipmentStatus.placed,
-        estimated_delivery= datetime.now() + datetime.timedelta(days = 3)
-    )
     
-    session.add(new_shipment)
-    await session.commit()
-    await session.refresh(new_shipment)
-    
-    new_id = new_shipment.id
-    return {"id": new_id}
 
 
 
