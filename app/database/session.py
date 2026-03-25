@@ -44,3 +44,5 @@ async def session_bind():
     async with async_session() as session:
         yield session
         
+SessionDep = Annotated[AsyncSession, Depends(session_bind)]
+        
