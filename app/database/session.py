@@ -1,8 +1,9 @@
 
 from typing import Annotated
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import create_engine, create_async_engine
+from sqlalchemy.ext.asyncio import create_engine, create_async_engine, AsyncSession
 from sqlmodel import SQLModel, Session
+from sqlalchemy.orm import sessionmaker
 
 from app.config import DatabaseSettings
 
@@ -33,4 +34,13 @@ async def create_db():
     # context manager
     async with engine.begin() as conncetion:
         await conncetion.run_sync(SQLModel.metadata.create_all())
+        
+async def session_bind():
+    
+    async_session = sessionmaker(bind=engine,
+                 class_=AsyncSession,
+                 expire_on_commit=False)
+    
+    async with async_session() as session:
+        yield session
         
