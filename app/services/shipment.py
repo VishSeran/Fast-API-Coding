@@ -26,7 +26,7 @@ class ShipmentService:
         
         self.session.add(new_Shipment)
         await self.session.commit()
-        await self.session.refresh()
+        await self.session.refresh(new_Shipment)
         
         return new_Shipment
     

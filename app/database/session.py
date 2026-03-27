@@ -33,7 +33,7 @@ engine = create_async_engine(
 async def create_db():
     # context manager
     async with engine.begin() as conncetion:
-        await conncetion.run_sync(SQLModel.metadata.create_all())
+        await conncetion.run_sync(SQLModel.metadata.create_all)
         
 async def session_bind():
     

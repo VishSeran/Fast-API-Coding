@@ -7,7 +7,7 @@ from app.database.session import create_db
 
 @asynccontextmanager
 async def lifespan_handler(app:FastAPI):
-    create_db()
+    await create_db()
     yield
     print("Server Stopped>>>")
     
