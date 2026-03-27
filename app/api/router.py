@@ -2,6 +2,7 @@ import datetime
 from typing import Any
 from fastapi import APIRouter, HTTPException,status
 
+from app.api.dependencies import Shipment_Session_Dep
 from app.database.model import Shipment, ShipmentStatus
 from app.database.session import SessionDep
 from app.api.schemas.schemas import ShipmentCreate, ShipmentRead, ShipmentUpdate
@@ -11,9 +12,9 @@ router = APIRouter()
 
 
 @router.get("/shipment",response_model=ShipmentRead)
-async def get_shipment_by_id(id: int, session:SessionDep):
+async def get_shipment_by_id(id: int, service:Shipment_Session_Dep):
     
-    shipment = await ShipmentService(session).get(id)
+    shipment = await service.get(id)
     
     if shipment is None:
         raise HTTPException(
@@ -24,8 +25,8 @@ async def get_shipment_by_id(id: int, session:SessionDep):
     
 
 @router.post("/shipment")
-async def add_shipment(shipment: ShipmentCreate,session:SessionDep) -> Shipment:  
-    return await ShipmentService(session).add(shipment)
+async def add_shipment(shipment: ShipmentCreate, service:Shipment_Session_Dep) -> Shipment:  
+    return await service.add(shipment)
 
 
 
@@ -48,7 +49,7 @@ async def add_shipment(shipment: ShipmentCreate,session:SessionDep) -> Shipment:
 #     return shipments[id]
 
 @router.patch("/shipment")
-async def patch_shipment(id:int, body: ShipmentUpdate, session: SessionDep) -> dict[str,Any]:
+async def patch_shipment(id:int, body: ShipmentUpdate, service:Shipment_Session_Dep) -> dict[str,Any]:
     
     update_data = body.model_dump(exclude_none=True)
     
@@ -58,7 +59,7 @@ async def patch_shipment(id:int, body: ShipmentUpdate, session: SessionDep) -> d
             detail= "Empty request"
         )
     
-    update_shipment = await ShipmentService(session).update(id, update_data)
+    update_shipment = await service.update(id, update_data)
     
     if update_shipment is None:
         raise HTTPException(status_code=404, detail="Shipment not found")
@@ -66,6 +67,6 @@ async def patch_shipment(id:int, body: ShipmentUpdate, session: SessionDep) -> d
     return update_shipment
 
 @router.delete("/shipment")
-async def delete_shipment(id:int, session:SessionDep) -> dict[str,str]:
-    await ShipmentService(session).delete(id)
+async def delete_shipment(id:int, service:Shipment_Session_Dep) -> dict[str,str]:
+    await service.delete(id)
     return {"Details": "shipment with id {} is deleted".format(id)}
