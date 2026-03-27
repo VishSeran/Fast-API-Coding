@@ -1,12 +1,10 @@
-import datetime
-from typing import Any
-from fastapi import APIRouter, HTTPException,status
 
-from app.api.dependencies import Shipment_Session_Dep
-from app.database.model import Shipment, ShipmentStatus
-from app.database.session import SessionDep
-from app.api.schemas.schemas import ShipmentCreate, ShipmentRead, ShipmentUpdate
-from app.services.shipment import ShipmentService
+
+from fastapi import APIRouter, HTTPException, status
+
+from .dependencies import Shipment_Session_Dep
+from .schemas.schemas import ShipmentCreate, ShipmentRead, ShipmentUpdate
+from app.database.model import Shipment
 
 router = APIRouter()
 
@@ -49,7 +47,7 @@ async def add_shipment(shipment: ShipmentCreate, service:Shipment_Session_Dep) -
 #     return shipments[id]
 
 @router.patch("/shipment")
-async def patch_shipment(id:int, body: ShipmentUpdate, service:Shipment_Session_Dep) -> dict[str,Any]:
+async def patch_shipment(id:int, body: ShipmentUpdate, service:Shipment_Session_Dep) -> dict:
     
     update_data = body.model_dump(exclude_none=True)
     
