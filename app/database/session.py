@@ -1,8 +1,8 @@
 
 from typing import Annotated
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import create_engine, create_async_engine, AsyncSession
-from sqlmodel import SQLModel, Session
+from sqlalchemy.ext.asyncio import  create_async_engine, AsyncSession
+from sqlmodel import SQLModel
 from sqlalchemy.orm import sessionmaker
 
 from app.config import DatabaseSettings
@@ -26,7 +26,7 @@ from app.config import DatabaseSettings
 settings = DatabaseSettings()
 
 engine = create_async_engine(
-    url= settings.POSTGRES_URL,
+    url= f"postgresql+asyncpg://{settings.POSTGRES_USERNAME}:{settings.POSTGRES_PASSWORD}@localhost:5432/{settings.POSTGRES_DB}",
     echo = True
 )
 
