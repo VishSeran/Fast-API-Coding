@@ -1,5 +1,4 @@
 
-from typing import Any
 
 from fastapi import APIRouter, HTTPException, status
 
@@ -48,7 +47,7 @@ async def add_shipment(shipment: ShipmentCreate, service:Shipment_Session_Dep) -
 #     return shipments[id]
 
 @router.patch("/shipment")
-async def patch_shipment(id:int, body: ShipmentUpdate, service:Shipment_Session_Dep) -> dict[str,Any]:
+async def patch_shipment(id:int, body: ShipmentUpdate, service:Shipment_Session_Dep) -> dict:
     
     update_data = body.model_dump(exclude_none=True)
     
