@@ -57,12 +57,12 @@ async def patch_shipment(id:int, body: ShipmentUpdate, service:Shipment_Session_
             detail= "Empty request"
         )
     
-    update_shipment = await service.update(id, update_data)
+    updated_shipment = await service.update(id, update_data)
     
-    if update_shipment is None:
+    if updated_shipment is None:
         raise HTTPException(status_code=404, detail="Shipment not found")
     
-    return update_shipment
+    return updated_shipment
 
 @router.delete("/shipment")
 async def delete_shipment(id:int, service:Shipment_Session_Dep) -> dict[str,str]:
